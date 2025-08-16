@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skin Type Quiz</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f8f5;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+    }
+    .quiz-container {
+        max-width: 500px;
+        background: #fff;
+        padding: 20px;
+        margin: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+        text-align: center;
+        color: #4CAF50;
+    }
+    .question {
+        margin: 15px 0;
+    }
+    label {
+        display: block;
+        margin: 8px 0;
+        cursor: pointer;
+    }
+    button {
+        background: #4CAF50;
+        color: white;
+        border: none;
+        padding: 12px;
+        width: 100%;
+        font-size: 16px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #45a049;
+    }
+    .result {
+        margin-top: 20px;
+        padding: 15px;
+        background: #e8f5e9;
+        border-radius: 8px;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h2>Find Your Skin Type</h2>
+    <form id="quizForm">
+        <div class="question">
+            <p>1. How does your skin feel after cleansing?</p>
+            <label><input type="radio" name="q1" value="dry"> Tight and dry</label>
+            <label><input type="radio" name="q1" value="oily"> Shiny and greasy</label>
+            <label><input type="radio" name="q1" value="normal"> Comfortable</label>
+            <label><input type="radio" name="q1" value="combo"> Oily in T-zone, dry elsewhere</label>
+        </div>
+
+        <div class="question">
+            <p>2. How often do you get breakouts?</p>
+            <label><input type="radio" name="q2" value="oily"> Often</label>
+            <label><input type="radio" name="q2" value="normal"> Rarely</label>
+            <label><input type="radio" name="q2" value="dry"> Almost never</label>
+            <label><input type="radio" name="q2" value="combo"> Only in certain areas</label>
+        </div>
+
+        <div class="question">
+            <p>3. How does your skin look midday?</p>
+            <label><input type="radio" name="q3" value="dry"> Dull and flaky</label>
+            <label><input type="radio" name="q3" value="oily"> Very shiny</label>
+            <label><input type="radio" name="q3" value="normal"> Fresh and balanced</label>
+            <label><input type="radio" name="q3" value="combo"> Shiny forehead/nose, dry cheeks</label>
+        </div>
+
+        <div class="question">
+            <p>4. How sensitive is your skin?</p>
+            <label><input type="radio" name="q4" value="dry"> Very sensitive</label>
+            <label><input type="radio" name="q4" value="oily"> Not sensitive</label>
+            <label><input type="radio" name="q4" value="normal"> Occasionally sensitive</label>
+            <label><input type="radio" name="q4" value="combo"> Sensitive in some areas</label>
+        </div>
+
+        <div class="question">
+            <p>5. How visible are your pores?</p>
+            <label><input type="radio" name="q5" value="dry"> Small and tight</label>
+            <label><input type="radio" name="q5" value="oily"> Large and visible</label>
+            <label><input type="radio" name="q5" value="normal"> Medium</label>
+            <label><input type="radio" name="q5" value="combo"> Large in T-zone only</label>
+        </div>
+
+        <button type="button" onclick="calculateResult()">Get My Skin Type</button>
+    </form>
+
+    <div id="result" class="result" style="display:none;"></div>
+</div>
+
+<script>
+function calculateResult() {
+    const form = document.getElementById('quizForm');
+    const answers = new FormData(form);
+    let score = { dry: 0, oily: 0, normal: 0, combo: 0 };
+
+    for (let value of answers.values()) {
+        score[value]++;
+    }
+
+    let skinType = Object.keys(score).reduce((a, b) => score[a] > score[b] ? a : b);
+
+    let descriptions = {
+        dry: "Your skin is Dry: needs hydration and gentle moisturizers.",
+        oily: "Your skin is Oily: control oil with lightweight, non-comedogenic products.",
+        normal: "Your skin is Normal: balanced and healthy — maintain it with a simple routine.",
+        combo: "Your skin is Combination: care for oily and dry areas differently."
+    };
+
+    document.getElementById('result').innerHTML = descriptions[skinType];
+    document.getElementById('result').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
