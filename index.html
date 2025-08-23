@@ -1,133 +1,308 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Skin Type Quiz</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Skin Type Quiz — Skin1004 Recommendations</title>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f4f8f5;
-        margin: 0;
-        padding: 20px;
-        color: #333;
-    }
-    .quiz-container {
-        max-width: 500px;
-        background: #fff;
-        padding: 20px;
-        margin: auto;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    h2 {
-        text-align: center;
-        color: #4CAF50;
-    }
-    .question {
-        margin: 15px 0;
-    }
-    label {
-        display: block;
-        margin: 8px 0;
-        cursor: pointer;
-    }
-    button {
-        background: #4CAF50;
-        color: white;
-        border: none;
-        padding: 12px;
-        width: 100%;
-        font-size: 16px;
-        border-radius: 6px;
-        cursor: pointer;
-    }
-    button:hover {
-        background: #45a049;
-    }
-    .result {
-        margin-top: 20px;
-        padding: 15px;
-        background: #e8f5e9;
-        border-radius: 8px;
-        font-weight: bold;
-    }
+  :root{
+    --bg:#f6fbf7;
+    --card:#ffffff;
+    --accent:#2f9e54;
+    --accent-700:#238643;
+    --muted:#6b7280;
+    --success-bg:#e8f5e9;
+    --warning-bg:#fff4e5;
+    --radius:12px;
+    --max-width:760px;
+    --gap:12px;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+
+  html,body{height:100%}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:#0f172a;
+    padding:28px 20px;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    display:flex;
+    justify-content:center;
+  }
+
+  .quiz-container{
+    width:100%;
+    max-width:var(--max-width);
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:22px;
+    box-shadow:0 8px 30px rgba(2,6,23,0.08);
+  }
+
+  header{display:flex;align-items:flex-start;gap:14px}
+  h1{margin:0;color:var(--accent);font-size:20px}
+  p.lead{margin:6px 0 0;color:var(--muted);line-height:1.35}
+
+  form{margin-top:18px}
+  fieldset{border:0;margin:0;padding:0 0 14px}
+  legend{font-weight:700;margin-bottom:8px}
+  .options{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px}
+  label.option{
+    display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer;border:1px solid transparent;
+    transition:all .12s ease;
+  }
+  label.option:hover{background:#f6fdf4}
+  input[type="radio"]{width:18px;height:18px;flex:0 0 18px}
+  label.option[aria-checked="true"]{background:#f3fbf4;border-color:var(--accent-700)}
+  .actions{display:flex;gap:10px;margin-top:14px}
+  button{
+    background:var(--accent);
+    color:white;
+    border:0;
+    padding:12px 16px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+  }
+  button.secondary{
+    background:#f1f5f9;color:#0f172a;border:1px solid #e6eef4;
+  }
+  button:disabled{opacity:.6;cursor:not-allowed}
+  #result{margin-top:18px;padding:14px;border-radius:10px;display:none}
+  .result-title{font-weight:700;margin:0 0 6px}
+  .product{display:flex;gap:12px;align-items:flex-start;margin-top:8px}
+  .product .info{flex:1}
+  .product .title{margin:0;font-weight:800}
+  .product .desc{margin:6px 0;color:var(--muted);line-height:1.3}
+  .product a{color:var(--accent);text-decoration:none;font-weight:700}
+  .note{font-size:13px;color:var(--muted);margin-top:10px}
+  @media (max-width:520px){
+    .options{grid-template-columns:1fr}
+  }
+  .sr-only{position:absolute!important;clip:rect(1px,1px,1px,1px);padding:0;border:0;height:1px;width:1px;overflow:hidden}
 </style>
 </head>
 <body>
+  <main class="quiz-container" role="main" aria-labelledby="quizTitle">
+    <header>
+      <div>
+        <h1 id="quizTitle">Find Your Skin Type</h1>
+        <p class="lead">5 quick questions — get a tailored Skin1004 product recommendation and short usage tips.</p>
+      </div>
+    </header>
 
-<div class="quiz-container">
-    <h2>Find Your Skin Type</h2>
-    <form id="quizForm">
-        <div class="question">
-            <p>1. How does your skin feel after cleansing?</p>
-            <label><input type="radio" name="q1" value="dry"> Tight and dry</label>
-            <label><input type="radio" name="q1" value="oily"> Shiny and greasy</label>
-            <label><input type="radio" name="q1" value="normal"> Comfortable</label>
-            <label><input type="radio" name="q1" value="combo"> Oily in T-zone, dry elsewhere</label>
+    <form id="quizForm" aria-describedby="formHelp" novalidate>
+      <p id="formHelp" class="sr-only">Choose one option per question. Select all five answers to see your recommendation.</p>
+
+      <fieldset data-q="q1">
+        <legend>1. How does your skin feel after cleansing?</legend>
+        <div class="options" role="radiogroup" aria-labelledby="">
+          <label class="option" data-value="dry"><input type="radio" name="q1" value="dry" required> Tight and dry</label>
+          <label class="option" data-value="oily"><input type="radio" name="q1" value="oily"> Shiny and greasy</label>
+          <label class="option" data-value="normal"><input type="radio" name="q1" value="normal"> Comfortable</label>
+          <label class="option" data-value="combo"><input type="radio" name="q1" value="combo"> Oily in T-zone, dry elsewhere</label>
         </div>
+      </fieldset>
 
-        <div class="question">
-            <p>2. How often do you get breakouts?</p>
-            <label><input type="radio" name="q2" value="oily"> Often</label>
-            <label><input type="radio" name="q2" value="normal"> Rarely</label>
-            <label><input type="radio" name="q2" value="dry"> Almost never</label>
-            <label><input type="radio" name="q2" value="combo"> Only in certain areas</label>
+      <fieldset data-q="q2">
+        <legend>2. How often do you get breakouts?</legend>
+        <div class="options" role="radiogroup">
+          <label class="option" data-value="oily"><input type="radio" name="q2" value="oily" required> Often</label>
+          <label class="option" data-value="normal"><input type="radio" name="q2" value="normal"> Rarely</label>
+          <label class="option" data-value="dry"><input type="radio" name="q2" value="dry"> Almost never</label>
+          <label class="option" data-value="combo"><input type="radio" name="q2" value="combo"> Only in certain areas</label>
         </div>
+      </fieldset>
 
-        <div class="question">
-            <p>3. How does your skin look midday?</p>
-            <label><input type="radio" name="q3" value="dry"> Dull and flaky</label>
-            <label><input type="radio" name="q3" value="oily"> Very shiny</label>
-            <label><input type="radio" name="q3" value="normal"> Fresh and balanced</label>
-            <label><input type="radio" name="q3" value="combo"> Shiny forehead/nose, dry cheeks</label>
+      <fieldset data-q="q3">
+        <legend>3. How does your skin look midday?</legend>
+        <div class="options" role="radiogroup">
+          <label class="option" data-value="dry"><input type="radio" name="q3" value="dry" required> Dull and flaky</label>
+          <label class="option" data-value="oily"><input type="radio" name="q3" value="oily"> Very shiny</label>
+          <label class="option" data-value="normal"><input type="radio" name="q3" value="normal"> Fresh and balanced</label>
+          <label class="option" data-value="combo"><input type="radio" name="q3" value="combo"> Shiny forehead/nose, dry cheeks</label>
         </div>
+      </fieldset>
 
-        <div class="question">
-            <p>4. How sensitive is your skin?</p>
-            <label><input type="radio" name="q4" value="dry"> Very sensitive</label>
-            <label><input type="radio" name="q4" value="oily"> Not sensitive</label>
-            <label><input type="radio" name="q4" value="normal"> Occasionally sensitive</label>
-            <label><input type="radio" name="q4" value="combo"> Sensitive in some areas</label>
+      <fieldset data-q="q4">
+        <legend>4. How sensitive is your skin?</legend>
+        <div class="options" role="radiogroup">
+          <label class="option" data-value="dry"><input type="radio" name="q4" value="dry" required> Very sensitive</label>
+          <label class="option" data-value="oily"><input type="radio" name="q4" value="oily"> Not sensitive</label>
+          <label class="option" data-value="normal"><input type="radio" name="q4" value="normal"> Occasionally sensitive</label>
+          <label class="option" data-value="combo"><input type="radio" name="q4" value="combo"> Sensitive in some areas</label>
         </div>
+      </fieldset>
 
-        <div class="question">
-            <p>5. How visible are your pores?</p>
-            <label><input type="radio" name="q5" value="dry"> Small and tight</label>
-            <label><input type="radio" name="q5" value="oily"> Large and visible</label>
-            <label><input type="radio" name="q5" value="normal"> Medium</label>
-            <label><input type="radio" name="q5" value="combo"> Large in T-zone only</label>
+      <fieldset data-q="q5">
+        <legend>5. How visible are your pores?</legend>
+        <div class="options" role="radiogroup">
+          <label class="option" data-value="dry"><input type="radio" name="q5" value="dry" required> Small and tight</label>
+          <label class="option" data-value="oily"><input type="radio" name="q5" value="oily"> Large and visible</label>
+          <label class="option" data-value="normal"><input type="radio" name="q5" value="normal"> Medium</label>
+          <label class="option" data-value="combo"><input type="radio" name="q5" value="combo"> Large in T-zone only</label>
         </div>
+      </fieldset>
 
-        <button type="button" onclick="calculateResult()">Get My Skin Type</button>
+      <div class="actions" role="group" aria-label="Quiz actions">
+        <button type="button" id="submitBtn">Get My Skin Type</button>
+        <button type="button" class="secondary" id="resetBtn">Reset</button>
+      </div>
     </form>
 
-    <div id="result" class="result" style="display:none;"></div>
-</div>
+    <div id="result" role="status" aria-live="polite"></div>
+    <p class="note">Recommendations are suggestions only. Patch-test products and consult a dermatologist for specific medical concerns.</p>
+  </main>
 
 <script>
-function calculateResult() {
-    const form = document.getElementById('quizForm');
-    const answers = new FormData(form);
-    let score = { dry: 0, oily: 0, normal: 0, combo: 0 };
+/*
+  What I changed:
+  - Added accessibility improvements (fieldsets/legends, aria-live, role attributes).
+  - Improved visuals and responsive layout.
+  - Added client-side validation and clearer result UI.
+  - Added curated Skin1004 product recommendations with short usage tips.
+  - Made options keyboard/selectable-friendly and visually highlight selected option.
 
-    for (let value of answers.values()) {
-        score[value]++;
+  Next: you can copy this file into the repository (index.html). If you'd like, I can:
+    - add product images,
+    - link to exact product pages per locale,
+    - produce translations,
+    - or commit this directly to your repo if you give me details for the branch/commit message.
+*/
+
+(function(){
+  const form = document.getElementById('quizForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const resultEl = document.getElementById('result');
+
+  // Skin1004 product map: friendly names, short reasons, and a base link.
+  const productMap = {
+    dry: {
+      name: 'Skin1004 Hyalu-Cica Water-Gel Cream',
+      desc: 'Lightweight but highly hydrating; helps soothe and lock in moisture without heaviness — ideal for dry or sensitive skin layers.',
+      why: 'Use after serum (AM/PM) to seal hydration. Apply to damp skin for best absorption.',
+      link: 'https://skin1004.com'
+    },
+    oily: {
+      name: 'Skin1004 Madagascar Centella Ampoule',
+      desc: 'A calming, lightweight ampoule rich in centella asiatica extract to soothe inflammation while keeping texture light for oily skin.',
+      why: 'Use 2–3 drops on damp skin before moisturizer. Helps soothe and balance oil-prone areas.',
+      link: 'https://skin1004.com'
+    },
+    normal: {
+      name: 'Skin1004 Madagascar Centella Ampoule',
+      desc: 'A gentle everyday serum to support the skin barrier and maintain balance for normal skin.',
+      why: 'Use mornings and evenings under moisturizer to keep skin comfortable and resilient.',
+      link: 'https://skin1004.com'
+    },
+    combo: {
+      name: 'Skin1004 Madagascar Centella Ampoule + Light Moisturizer',
+      desc: 'Use the ampoule to calm red or dry patches; pair with a lightweight gel-cream on oily zones to keep balance.',
+      why: 'Apply ampoule evenly, then a gel moisturizer on the T-zone if needed. Spot-treat dry cheeks with richer cream.',
+      link: 'https://skin1004.com'
+    }
+  };
+
+  // Visual selection handling for better UX (highlighting labels)
+  document.querySelectorAll('label.option').forEach(label => {
+    const input = label.querySelector('input[type="radio"]');
+    // Keep aria-checked state in sync
+    input.addEventListener('change', () => {
+      const group = input.name;
+      document.querySelectorAll(`label.option input[name="${group}"]`).forEach(i => {
+        i.closest('label').setAttribute('aria-checked', i.checked ? 'true' : 'false');
+      });
+    });
+    // Allow clicking label area to focus and check (already default, but ensure keyboard focus style)
+    label.addEventListener('keydown', (e) => {
+      if(e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); input.checked = true; input.dispatchEvent(new Event('change')); }
+    });
+  });
+
+  function validateAnswers(formData){
+    // Ensure 5 answers selected
+    return ['q1','q2','q3','q4','q5'].every(name => formData.get(name));
+  }
+
+  function calculateResult(){
+    const data = new FormData(form);
+    if(!validateAnswers(data)){
+      resultEl.style.display = 'block';
+      resultEl.style.background = 'var(--warning-bg)';
+      resultEl.innerHTML = '<strong>Please answer all 5 questions</strong><div class="desc">We need every answer to provide an accurate recommendation.</div>';
+      resultEl.scrollIntoView({behavior:'smooth',block:'center'});
+      return;
     }
 
-    let skinType = Object.keys(score).reduce((a, b) => score[a] > score[b] ? a : b);
+    // Count votes
+    const score = { dry:0, oily:0, normal:0, combo:0 };
+    for(const name of ['q1','q2','q3','q4','q5']){
+      const v = data.get(name);
+      if(score.hasOwnProperty(v)) score[v]++;
+    }
 
-    let descriptions = {
-        dry: "Your skin is Dry: needs hydration and gentle moisturizers.",
-        oily: "Your skin is Oily: control oil with lightweight, non-comedogenic products.",
-        normal: "Your skin is Normal: balanced and healthy — maintain it with a simple routine.",
-        combo: "Your skin is Combination: care for oily and dry areas differently."
-    };
+    // Determine winner with tie-break priority (normal > combo > oily > dry)
+    const priority = ['normal','combo','oily','dry'];
+    let winner = null;
+    let max = -1;
+    for(const key of Object.keys(score)){
+      if(score[key] > max){ max = score[key]; winner = key; }
+      else if(score[key] === max){
+        const curIdx = priority.indexOf(winner);
+        const newIdx = priority.indexOf(key);
+        if(newIdx < curIdx) winner = key;
+      }
+    }
 
-    document.getElementById('result').innerHTML = descriptions[skinType];
-    document.getElementById('result').style.display = 'block';
-}
+    const product = productMap[winner] || productMap.normal;
+
+    // Render result
+    resultEl.style.display = 'block';
+    resultEl.style.background = 'var(--success-bg)';
+    resultEl.innerHTML = ''
+      + `<div class="result-title">Your skin type: ${winner.toUpperCase()}</div>`
+      + `<div class="product" aria-hidden="false">`
+      + `  <div class="info">`
+      + `    <p class="title">${escapeHtml(product.name)}</p>`
+      + `    <p class="desc">${escapeHtml(product.desc)}</p>`
+      + `    <p style="margin:0 0 8px"><strong>Usage:</strong> ${escapeHtml(product.why)}</p>`
+      + `    <p style="margin:0"><a href="${product.link}" target="_blank" rel="noopener">View Skin1004 products</a></p>`
+      + `  </div>`
+      + `</div>`;
+
+    resultEl.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+
+  // small helper to avoid accidental HTML injection when inserting texts
+  function escapeHtml(str){
+    return String(str)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
+
+  submitBtn.addEventListener('click', calculateResult);
+  resetBtn.addEventListener('click', () => {
+    form.reset();
+    // reset aria-checked states
+    document.querySelectorAll('label.option').forEach(l => l.setAttribute('aria-checked','false'));
+    resultEl.style.display = 'none';
+    resultEl.innerHTML = '';
+  });
+
+  // Optional: submit on Enter key when focused on a radio button to improve keyboard UX
+  form.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' && (e.target.type === 'radio' || e.target.tagName === 'LABEL')){
+      e.preventDefault();
+      calculateResult();
+    }
+  });
+
+})();
 </script>
-
 </body>
 </html>
